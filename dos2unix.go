@@ -47,8 +47,8 @@ func (d *dos2unix) Read(b []byte) (int, error) {
 	return n, nil
 }
 
-// DOS2Unix wraps a reader with a reader that replaces all instances of \r\n
-// with \n
+// DOS2Unix wraps a byte reader with a reader that replaces all instances of
+// \r\n with \n
 func DOS2Unix(r io.ByteReader) io.Reader {
 	return &dos2unix{r: r}
 }
@@ -83,8 +83,8 @@ func (u *unix2dos) Read(b []byte) (int, error) {
 	return n, nil
 }
 
-// Unix2DOS wraps a reader with a reader that replaces all instance of \n with
-// \r\n
+// Unix2DOS wraps a byte reader with a reader that replaces all instances of \n
+// with \r\n
 func Unix2DOS(r io.ByteReader) io.Reader {
 	return &unix2dos{r: r}
 }

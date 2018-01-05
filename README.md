@@ -12,12 +12,13 @@ termination styles
 ```go
 func DOS2Unix(r io.ByteReader) io.Reader
 ```
-DOS2Unix wraps a reader with a reader that replaces all instances of \r\n with
-\n
+DOS2Unix wraps a byte reader with a reader that replaces all instances of \r\n
+with \n
 
 #### func  Unix2DOS
 
 ```go
 func Unix2DOS(r io.ByteReader) io.Reader
 ```
-Unix2DOS wraps a reader with a reader that replaces all instance of \n with \r\n
+Unix2DOS wraps a byte reader with a reader that replaces all instances of \n
+with \r\n
