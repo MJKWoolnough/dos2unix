@@ -10,7 +10,7 @@ termination styles
 #### func  DOS2Unix
 
 ```go
-func DOS2Unix(r io.ByteReader) io.Reader
+func DOS2Unix(r io.Reader) io.Reader
 ```
 DOS2Unix wraps a byte reader with a reader that replaces all instances of \r\n
 with \n
@@ -18,7 +18,7 @@ with \n
 #### func  Unix2DOS
 
 ```go
-func Unix2DOS(r io.ByteReader) io.Reader
+func Unix2DOS(r io.Reader) io.Reader
 ```
 Unix2DOS wraps a byte reader with a reader that replaces all instances of \n
 with \r\n

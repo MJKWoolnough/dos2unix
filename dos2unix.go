@@ -4,6 +4,16 @@ package dos2unix
 
 import "io"
 
+type byteReader struct {
+	io.Reader
+	buf [1]byte
+}
+
+func (b *byteReader) ReadByte() (byte, error) {
+	_, err := io.ReadFull(b.Reader, b.buf[:])
+	return b.buf[0], err
+}
+
 type dos2unix struct {
 	r    io.ByteReader
 	b    bool
@@ -49,8 +59,12 @@ func (d *dos2unix) Read(b []byte) (int, error) {
 
 // DOS2Unix wraps a byte reader with a reader that replaces all instances of
 // \r\n with \n
-func DOS2Unix(r io.ByteReader) io.Reader {
-	return &dos2unix{r: r}
+func DOS2Unix(r io.Reader) io.Reader {
+	br, ok := r.(io.ByteReader)
+	if !ok {
+		br = &byteReader{Reader: r}
+	}
+	return &dos2unix{r: br}
 }
 
 type unix2dos struct {
@@ -85,6 +99,10 @@ func (u *unix2dos) Read(b []byte) (int, error) {
 
 // Unix2DOS wraps a byte reader with a reader that replaces all instances of \n
 // with \r\n
-func Unix2DOS(r io.ByteReader) io.Reader {
-	return &unix2dos{r: r}
+func Unix2DOS(r io.Reader) io.Reader {
+	br, ok := r.(io.ByteReader)
+	if !ok {
+		br = &byteReader{Reader: r}
+	}
+	return &unix2dos{r: br}
 }
