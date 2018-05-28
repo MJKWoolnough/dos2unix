@@ -21,9 +21,6 @@ type dos2unix struct {
 }
 
 func (d *dos2unix) Read(b []byte) (int, error) {
-	if len(b) == 0 {
-		return 0, nil
-	}
 	var n int
 	for len(b) > 0 {
 		if d.b {
