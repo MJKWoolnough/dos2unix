@@ -9,6 +9,7 @@ import (
 )
 
 func TestDOS2Unix(t *testing.T) {
+	buf := make([]byte, 10)
 	for n, test := range []struct {
 		Input, Output memio.Buffer
 	}{
@@ -36,7 +37,7 @@ func TestDOS2Unix(t *testing.T) {
 		for i := 1; i < 10; i++ {
 			var output memio.Buffer
 			input := test.Input
-			io.CopyBuffer(&output, DOS2Unix(&input), make([]byte, i))
+			io.CopyBuffer(&output, DOS2Unix(&input), buf[:i])
 			if !bytes.Equal(output, test.Output) {
 				t.Errorf("test %d.%d: expected output: %q, got %q", n+1, i, test.Output, output)
 			}
@@ -45,6 +46,7 @@ func TestDOS2Unix(t *testing.T) {
 }
 
 func TestUnix2DOS(t *testing.T) {
+	buf := make([]byte, 10)
 	for n, test := range []struct {
 		Input, Output memio.Buffer
 	}{
@@ -68,7 +70,7 @@ func TestUnix2DOS(t *testing.T) {
 		for i := 1; i < 10; i++ {
 			var output memio.Buffer
 			input := test.Input
-			io.CopyBuffer(&output, Unix2DOS(&input), make([]byte, i))
+			io.CopyBuffer(&output, Unix2DOS(&input), buf[:i])
 			if !bytes.Equal(output, test.Output) {
 				t.Errorf("test %d.%d: expected output: %q, got %q", n+1, i, test.Output, output)
 			}
