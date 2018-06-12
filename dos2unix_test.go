@@ -5,7 +5,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/MJKWoolnough/memio"
+	"vimagination.zapto.org/memio"
 )
 
 func TestDOS2Unix(t *testing.T) {

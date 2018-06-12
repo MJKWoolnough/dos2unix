@@ -1,6 +1,6 @@
 // Package dos2unix provides functions to convert between dos and unix line
 // termination styles
-package dos2unix
+package dos2unix // import "vimagination.zapto.org/dos2unix"
 
 import "io"
 

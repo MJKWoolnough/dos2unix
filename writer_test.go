@@ -5,7 +5,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/MJKWoolnough/memio"
+	"vimagination.zapto.org/memio"
 )
 
 type jr struct {
