@@ -1,8 +1,6 @@
 package dos2unix
 
-import (
-	"io"
-)
+import "io"
 
 // WriteFlusher combines the io.Writer interface with a buffer Flush method
 type WriteFlusher interface {
