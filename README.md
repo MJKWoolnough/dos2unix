@@ -1,6 +1,6 @@
 # dos2unix
 --
-    import "github.com/MJKWoolnough/dos2unix"
+    import "vimagination.zapto.org/dos2unix"
 
 Package dos2unix provides functions to convert between dos and unix line
 termination styles
