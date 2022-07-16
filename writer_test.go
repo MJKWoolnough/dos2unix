@@ -7,10 +7,6 @@ import (
 	"testing"
 )
 
-type jr struct {
-	io.Reader
-}
-
 func TestDOS2UnixWriter(t *testing.T) {
 	buf := make([]byte, 10)
 	output := bytes.NewBuffer(make([]byte, 0, 100))
