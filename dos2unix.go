@@ -2,7 +2,10 @@
 // termination styles
 package dos2unix // import "vimagination.zapto.org/dos2unix"
 
-import "io"
+import (
+	"io"
+	"slices"
+)
 
 type byteReader struct {
 	io.Reader
@@ -15,53 +18,66 @@ func (b *byteReader) ReadByte() (byte, error) {
 }
 
 type dos2unix struct {
-	r    io.ByteReader
+	r    io.Reader
 	b    bool
-	char byte
+	char [1]byte
 }
 
 func (d *dos2unix) Read(b []byte) (int, error) {
+	if len(b) == 0 {
+		return 0, nil
+	}
+
 	var n int
-	for len(b) > 0 {
-		if d.b {
-			b[0] = d.char
-			d.b = false
-			b = b[1:]
-			n++
-			continue
-		}
-		c, err := d.r.ReadByte()
-		if err != nil {
+
+	s := b
+
+	if d.b {
+		b[0] = d.char[0]
+		s = b[1:]
+		n = 1
+
+		if d.b = len(s) == 0 && b[0] == '\r'; d.b {
+			_, err := d.r.Read(d.char[:])
+			if d.char[0] == '\n' {
+				b[0] = '\n'
+				d.b = false
+			}
+
 			return n, err
 		}
-		if c == '\r' {
-			d.char, err = d.r.ReadByte()
-			if err != io.EOF {
-				if err != nil {
-					return n, err
-				}
-				if d.char == '\n' {
-					c = '\n'
-				} else {
-					d.b = true
-				}
-			}
-		}
-		b[0] = c
-		b = b[1:]
-		n++
 	}
-	return n, nil
+
+	m, err := d.r.Read(s)
+	n += m
+
+	lastIsCR := false
+
+	for i := 0; i < n; i++ {
+		c := b[i]
+		if lastIsCR && c == '\n' {
+			b = slices.Delete(b, i-1, i)
+			n--
+			i--
+		}
+
+		lastIsCR = c == '\r'
+	}
+
+	if lastIsCR && err == nil {
+		n--
+		d.char[0] = '\r'
+	}
+
+	d.b = lastIsCR
+
+	return n, err
 }
 
 // DOS2Unix wraps a byte reader with a reader that replaces all instances of
 // \r\n with \n
 func DOS2Unix(r io.Reader) io.Reader {
-	br, ok := r.(io.ByteReader)
-	if !ok {
-		br = &byteReader{Reader: r}
-	}
-	return &dos2unix{r: br}
+	return &dos2unix{r: r}
 }
 
 type unix2dos struct {
