@@ -21,7 +21,10 @@ with \n
 func Unix2DOS(r io.Reader) io.Reader
 ```
 Unix2DOS wraps a byte reader with a reader that replaces all instances of \n
-with \r\n
+with \r\n.
+
+When reading from a non-buffered input, it is recommended to wrap the Reader
+with a bufio.Reader.
 
 #### func  Unix2DOSWriter
 
