@@ -7,6 +7,10 @@ import (
 	"testing"
 )
 
+type reader struct {
+	io.Reader
+}
+
 func TestDOS2UnixWriter(t *testing.T) {
 	buf := make([]byte, 10)
 	output := bytes.NewBuffer(make([]byte, 0, 100))
@@ -37,7 +41,7 @@ func TestDOS2UnixWriter(t *testing.T) {
 		for i := 1; i < 10; i++ {
 			output.Reset()
 			d := DOS2UnixWriter(output)
-			_, err := io.CopyBuffer(d, strings.NewReader(test.Input), buf[:i])
+			_, err := io.CopyBuffer(d, reader{strings.NewReader(test.Input)}, buf[:i])
 			if err != nil {
 				t.Errorf("test %d.%d: unexpected write error: %s", n+1, i, err)
 			} else if err := d.Flush(); err != nil {
@@ -74,7 +78,7 @@ func TestUnix2DOSWriter(t *testing.T) {
 	} {
 		for i := 1; i < 10; i++ {
 			output.Reset()
-			_, err := io.CopyBuffer(Unix2DOSWriter(output), strings.NewReader(test.Input), buf[:i])
+			_, err := io.CopyBuffer(Unix2DOSWriter(output), reader{strings.NewReader(test.Input)}, buf[:i])
 			if err != nil {
 				t.Errorf("test %d.%d: unexpected error: %s", n+1, i, err)
 			} else if !bytes.Equal(output.Bytes(), []byte(test.Output)) {

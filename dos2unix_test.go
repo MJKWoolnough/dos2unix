@@ -7,9 +7,14 @@ import (
 	"testing"
 )
 
+type writer struct {
+	io.Writer
+}
+
 func TestDOS2Unix(t *testing.T) {
 	buf := make([]byte, 10)
 	output := bytes.NewBuffer(make([]byte, 0, 100))
+	w := &writer{output}
 	for n, test := range []struct {
 		Input, Output string
 	}{
@@ -33,10 +38,14 @@ func TestDOS2Unix(t *testing.T) {
 			"qwertyuiop\rasdfgkl\rzxcbnm\r",
 			"qwertyuiop\rasdfgkl\rzxcbnm\r",
 		},
+		{
+			"Hello\r\r\n",
+			"Hello\r\n",
+		},
 	} {
 		for i := 1; i < 10; i++ {
 			output.Reset()
-			io.CopyBuffer(output, DOS2Unix(strings.NewReader(test.Input)), buf[:i])
+			io.CopyBuffer(w, DOS2Unix(strings.NewReader(test.Input)), buf[:i])
 			if !bytes.Equal(output.Bytes(), []byte(test.Output)) {
 				t.Errorf("test %d.%d: expected output: %q, got %q", n+1, i, test.Output, output)
 			}
@@ -47,6 +56,7 @@ func TestDOS2Unix(t *testing.T) {
 func TestUnix2DOS(t *testing.T) {
 	buf := make([]byte, 10)
 	output := bytes.NewBuffer(make([]byte, 0, 100))
+	w := &writer{output}
 	for n, test := range []struct {
 		Input, Output string
 	}{
@@ -69,7 +79,7 @@ func TestUnix2DOS(t *testing.T) {
 	} {
 		for i := 1; i < 10; i++ {
 			output.Reset()
-			io.CopyBuffer(output, Unix2DOS(strings.NewReader(test.Input)), buf[:i])
+			io.CopyBuffer(w, Unix2DOS(strings.NewReader(test.Input)), buf[:i])
 			if !bytes.Equal(output.Bytes(), []byte(test.Output)) {
 				t.Errorf("test %d.%d: expected output: %q, got %q", n+1, i, test.Output, output)
 			}
