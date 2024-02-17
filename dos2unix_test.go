@@ -42,6 +42,14 @@ func TestDOS2Unix(t *testing.T) {
 			"Hello\r\r\n",
 			"Hello\r\n",
 		},
+		{
+			"Hello\r\r\r\n",
+			"Hello\r\r\n",
+		},
+		{
+			"Hello\r\r\r\r\n",
+			"Hello\r\r\r\n",
+		},
 	} {
 		for i := 1; i < 10; i++ {
 			output.Reset()
