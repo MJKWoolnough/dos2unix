@@ -1,53 +1,51 @@
 # dos2unix
+
+[![CI](https://github.com/MJKWoolnough/dos2unix/actions/workflows/go-checks.yml/badge.svg)](https://github.com/MJKWoolnough/byteio/actions)
+[![Go Reference](https://pkg.go.dev/badge/vimagination.zapto.org/dos2unix.svg)](https://pkg.go.dev/vimagination.zapto.org/byteio)
+[![Go Report Card](https://goreportcard.com/badge/vimagination.zapto.org/dos2unix)](https://goreportcard.com/report/vimagination.zapto.org/byteio)
+
 --
     import "vimagination.zapto.org/dos2unix"
 
-Package dos2unix provides functions to convert between dos and unix line
-termination styles.
+Package dos2unix provides functions to convert between dos and unix line termination styles.
+
+## Highlights
+
+ - DOS2Unix & Unix2DOS functions which wrap `io.Reader`s to automatically convert line terminations.
+ - DOS2UnixWriter & Unix2DOSWriter functions which wrap `io.Writer`s to automatically convert line terminations. NB: The `Flush()` method must be called once writing is finished.
 
 ## Usage
 
-#### func  DOS2Unix
-
 ```go
-func DOS2Unix(r io.Reader) io.Reader
-```
-DOS2Unix wraps a byte reader with a reader that replaces all instances of \r\n
-with \n.
+package main
 
-#### func  Unix2DOS
+import (
+	"fmt"
+	"io"
+	"strings"
 
-```go
-func Unix2DOS(r io.Reader) io.Reader
-```
-Unix2DOS wraps a byte reader with a reader that replaces all instances of \n
-with \r\n.
+	"vimagination.zapto.org/dos2unix"
+)
 
-When reading from a non-buffered input, it is recommended to wrap the Reader
-with a bufio.Reader.
+func main() {
+	input := strings.NewReader("hello\r\nworld\r\n")
+	du := dos2unix.DOS2Unix(input)
+	out, _ := io.ReadAll(du)
 
-#### func  Unix2DOSWriter
+	fmt.Printf("%q\n", out)
+	// Output: "hello\nworld\n"
 
-```go
-func Unix2DOSWriter(w io.Writer) io.Writer
-```
-Unix2DOSWriter wraps a io.Writer to convert \n into \r\n.
+	input = strings.NewReader("hello\nworld\n")
+	ud := dos2unix.Unix2DOS(input)
+	out, _ := io.ReadAll(ud)
 
-#### type WriteFlusher
-
-```go
-type WriteFlusher interface {
-	io.Writer
-	Flush() error
+	fmt.Printf("%q\n", out)
+	// Output: "hello\r\nworld\r\n"
 }
 ```
 
-WriteFlusher combines the io.Writer interface with a buffer Flush method.
+## Documentation
 
-#### func  DOS2UnixWriter
+Full API docs can be found at:
 
-```go
-func DOS2UnixWriter(w io.Writer) WriteFlusher
-```
-DOS2UnixWriter wraps a writer to convert \r\n into \n. It is advisable to call
-the Flush method upon completion as a final \r may be buffered.
+https://pkg.go.dev/vimagination.zapto.org/dos2unix
