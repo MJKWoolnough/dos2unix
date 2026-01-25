@@ -7,7 +7,7 @@
 --
     import "vimagination.zapto.org/dos2unix"
 
-Package dos2unix provides functions to convert between dos and unix line termination styles.
+Package dos2unix provides functions to convert between DOS and Unix line termination styles.
 
 ## Highlights
 
