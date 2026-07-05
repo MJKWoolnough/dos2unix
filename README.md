@@ -2,7 +2,6 @@
 
 [![CI](https://github.com/MJKWoolnough/dos2unix/actions/workflows/go-checks.yml/badge.svg)](https://github.com/MJKWoolnough/dos2unix/actions)
 [![Go Reference](https://pkg.go.dev/badge/vimagination.zapto.org/dos2unix.svg)](https://pkg.go.dev/vimagination.zapto.org/dos2unix)
-[![Go Report Card](https://goreportcard.com/badge/vimagination.zapto.org/dos2unix)](https://goreportcard.com/report/vimagination.zapto.org/dos2unix)
 
 --
     import "vimagination.zapto.org/dos2unix"
